@@ -4,10 +4,10 @@
   </a>
 </p>
 
-<h1 align="center">The Web MCP</h1>
-<h3 align="center">Enhance AI Agents with Real-Time Web Data</h3>
+<h1 align="center">Python SDK</h1>
+<h3 align="center">A Python SDK for the Bright Data Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, search engine result parsing, and data management.</h3>
 
-A Python SDK for the Bright Data Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, search engine result parsing, and data management.
+
 
 ## Features
 
@@ -20,7 +20,16 @@ A Python SDK for the Bright Data Data extraction and Web unlocking tools, provid
 - **Zone Management**: Automatic zone creation and management
 - **Multiple Output Formats**: JSON, raw HTML, markdown, and more
 
-## Installation
+## Installation from package
+
+```python
+# Enter your project's folder in your terminal
+pip install brightdata
+
+# Make sure that you have pip installed on your device
+```
+
+## Installation from GitHub
 
 ```python
 # Clone the repository
