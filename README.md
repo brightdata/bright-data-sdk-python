@@ -1,6 +1,13 @@
-# Bright Data SDK
+<p align="center">
+  <a href="https://brightdata.com/">
+    <img src="https://mintlify.s3.us-west-1.amazonaws.com/brightdata/logo/light.svg" width="300" alt="Bright Data Logo">
+  </a>
+</p>
 
-A Python SDK for the Bright Data Web Scraping and SERP APIs, providing easy-to-use methods for web scraping, search engine result parsing, and data management.
+<h1 align="center">The Web MCP</h1>
+<h3 align="center">Enhance AI Agents with Real-Time Web Data</h3>
+
+A Python SDK for the Bright Data Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, search engine result parsing, and data management.
 
 ## Features
 
