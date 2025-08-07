@@ -1,10 +1,9 @@
 from brightdata import bdclient
 
-bd = bdclient(api_token="your-api-token") #can also be taken from .env file
+client = bdclient(api_token="your-api-token") # The API can also be taken from .env file
 
-URL = (["https://www.amazon.com/dp/B079QHML21",
-        "https://www.ebay.com/itm/365771796300",
-        "https://www.walmart.com/ip/Apple-MacBook-Air-13-3-inch-Laptop-Space-Gray-M1-Chip-8GB-RAM-256GB-storage/609040889"])
+urls = ["https://example1.com", "https://example2.com", "https://example3.com"] # Replace with real URLs
 
-results = bd.scrape(url=URL, )
+results = client.scrape(url=urls) # Try to hover over the "scrape" function to see what available parameters you can add
+
 bd.download_content(results, filename="scrape_results.json")
