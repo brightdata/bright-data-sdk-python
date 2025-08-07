@@ -1,6 +1,6 @@
 from brightdata import bdclient
 
-bd = bdclient(api_token="73fa4ac2-4487-4509-9250-d902e58985fd")
+bd = bdclient(api_token="your-api-token") #can also be taken from .env file
 
 URL = (["https://www.amazon.com/dp/B079QHML21",
         "https://www.ebay.com/itm/365771796300",
