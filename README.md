@@ -35,7 +35,7 @@ from brightdata import bdclient
 client = bdclient(api_token="your_api_token_here")
 
 # Or using environment variables
-# Set API_TOKEN in your environment or .env file
+# Set BRIGHTDATA_API_TOKEN in your environment or .env file
 client = bdclient()
 ```
 
@@ -107,7 +107,7 @@ print(f"Found {len(zones)} zones")
 Create a `.env` file in your project root:
 
 ```env
-API_TOKEN=your_bright_data_api_token
+BRIGHTDATA_API_TOKEN=your_bright_data_api_token
 WEB_UNLOCKER_ZONE=your_web_unlocker_zone  # Optional
 BROWSER_ZONE=your_browser_zone            # Optional  
 SERP_ZONE=your_serp_zone                 # Optional

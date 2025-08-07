@@ -42,7 +42,7 @@ class bdclient:
         #### Create an account at https://brightdata.com/ to get your API token.
 
         Args:
-            api_token: Your Bright Data API token (can also be set via API_TOKEN env var)
+            api_token: Your Bright Data API token (can also be set via BRIGHTDATA_API_TOKEN env var)
             auto_create_zones: Automatically create required zones if they don't exist (default: True)
             web_unlocker_zone: Custom zone name for web unlocker (default: from env or 'sdk_unlocker')
             browser_zone: Custom zone name for browser API (default: from env or 'sdk_browser')
@@ -52,9 +52,9 @@ class bdclient:
             load_dotenv()
         except ImportError:
             pass
-        self.api_token = api_token or os.getenv('API_TOKEN')
+        self.api_token = api_token or os.getenv('BRIGHTDATA_API_TOKEN')
         if not self.api_token:
-            raise ValueError("API token is required. Provide it as parameter or set API_TOKEN environment variable")
+            raise ValueError("API token is required. Provide it as parameter or set BRIGHTDATA_API_TOKEN environment variable")
         self.web_unlocker_zone = web_unlocker_zone or os.getenv('WEB_UNLOCKER_ZONE', 'sdk_unlocker')
         self.browser_zone = browser_zone or os.getenv('BROWSER_ZONE', 'sdk_browser')
         self.serp_zone = os.getenv('SERP_ZONE', 'sdk_serp')
