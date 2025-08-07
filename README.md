@@ -17,7 +17,7 @@ A Python SDK for the Bright Data Web Scraping and SERP APIs, providing easy-to-u
 
 ```python
 # Clone the repository
-git clone [https://github.com/villen5/bright-temp.git](https://github.com/brightdata/bright-data-sdk-python.git)
+git clone https://github.com/brightdata/bright-data-sdk-python.git
 cd bright-temp
 
 # Install dependencies
