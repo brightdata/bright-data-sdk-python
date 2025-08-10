@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center">Python SDK</h1>
-<h3 align="center">A Python SDK for the Bright Data Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, search engine result parsing, and data management.</h3>
+<h3 align="center">A Python SDK for the Bright Data's Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, search engine result parsing, and data management.</h3>
 
 
 
