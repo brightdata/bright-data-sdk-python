@@ -22,22 +22,20 @@
 
 ## Installation
 
-### From pypi
+### From PyPI (Coming Soon)
 ```bash
-# Enter your project's folder in your terminal
 pip install brightdata
-
-# Make sure that you have pip installed on your device
 ```
 
 ### From GitHub
 ```bash
-# Clone the repository
-git clone https://github.com/brightdata/bright-data-sdk-python.git
-cd bright-temp
+# Install directly from GitHub (recommended)
+pip install git+https://github.com/brightdata/bright-data-sdk-python.git
 
-# Install dependencies
-pip install requests python-dotenv
+# Or clone and install locally
+git clone https://github.com/brightdata/bright-data-sdk-python.git
+cd bright-data-sdk-python
+pip install .
 ```
 
 ## Quick Start
