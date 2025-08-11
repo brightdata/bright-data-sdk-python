@@ -53,7 +53,8 @@ Or you can use a custom zone name
 client = bdclient(
     api_token="your_token",
     auto_create_zones=False,          # Else it creates the Zone automatically
-    web_unlocker_zone="custom_zone",  # Custom zone name (serp_zone for search requests)
+    web_unlocker_zone="custom_zone",  # Custom zone name for web scraping
+    serp_zone="custom_serp_zone"      # Custom zone name for search requests
 )
 ```
 > [!TIP]

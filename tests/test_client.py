@@ -41,7 +41,6 @@ class TestBdClient:
         with patch.dict(os.environ, {}, clear=True):
             client = bdclient(api_token="test_token", auto_create_zones=False)
             assert client.web_unlocker_zone == "sdk_unlocker"
-            assert client.browser_zone == "sdk_browser" 
             assert client.serp_zone == "sdk_serp"
     
     def test_client_custom_zones(self):
@@ -50,11 +49,11 @@ class TestBdClient:
             client = bdclient(
                 api_token="test_token",
                 web_unlocker_zone="custom_unlocker",
-                browser_zone="custom_browser",
+                serp_zone="custom_serp",
                 auto_create_zones=False
             )
             assert client.web_unlocker_zone == "custom_unlocker"
-            assert client.browser_zone == "custom_browser"
+            assert client.serp_zone == "custom_serp"
 
 
 class TestClientMethods:

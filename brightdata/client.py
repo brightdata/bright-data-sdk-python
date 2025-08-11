@@ -8,7 +8,7 @@ from .api import WebScraper, SearchAPI
 from .utils import ZoneManager, setup_logging, get_logger
 from .exceptions import ValidationError, AuthenticationError, APIError
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 logger = get_logger('client')
 
@@ -28,7 +28,7 @@ class bdclient:
         api_token: str = None,
         auto_create_zones: bool = True,
         web_unlocker_zone: str = None,
-        browser_zone: str = None,
+        serp_zone: str = None,
         log_level: str = "INFO",
         structured_logging: bool = True,
         verbose: bool = None
@@ -37,12 +37,13 @@ class bdclient:
         Initialize the Bright Data client with your API token
         
         Create an account at https://brightdata.com/ to get your API token.
+        Go to settings > API keys , and verify that your API key have "Admin" permissions.
 
         Args:
             api_token: Your Bright Data API token (can also be set via BRIGHTDATA_API_TOKEN env var)
             auto_create_zones: Automatically create required zones if they don't exist (default: True)
             web_unlocker_zone: Custom zone name for web unlocker (default: from env or 'sdk_unlocker')
-            browser_zone: Custom zone name for browser API (default: from env or 'sdk_browser')
+            serp_zone: Custom zone name for SERP API (default: from env or 'sdk_serp')
             log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
             structured_logging: Whether to use structured JSON logging (default: True)
             verbose: Enable verbose logging (default: False). Can also be set via BRIGHTDATA_VERBOSE env var.
@@ -78,8 +79,7 @@ class bdclient:
         logger.info(f"API token validated successfully: {token_preview}")
             
         self.web_unlocker_zone = web_unlocker_zone or os.getenv('WEB_UNLOCKER_ZONE', 'sdk_unlocker')
-        self.browser_zone = browser_zone or os.getenv('BROWSER_ZONE', 'sdk_browser')
-        self.serp_zone = os.getenv('SERP_ZONE', 'sdk_serp')
+        self.serp_zone = serp_zone or os.getenv('SERP_ZONE', 'sdk_serp')
         self.auto_create_zones = auto_create_zones
         
         self.session = requests.Session()
