@@ -39,18 +39,26 @@ pip install .
 ## Quick Start
 
 ### 1. Initialize the Client
+> [!IMPORTANT]
+> Go to your [**account settings**](https://brightdata.com/cp/setting/users), to verify that your API key have **"admin permissions"**.
 
 ```python
 from brightdata import bdclient
 
-# Using API token directly
-client = bdclient(api_token="your_api_token_here")
+client = bdclient(api_token="your_api_token_here") # can also be defined as BRIGHTDATA_API_TOKEN in your .env file
 ```
 
-Or use by setting BRIGHTDATA_API_TOKEN in .env file
+Or you can use a custom zone name
 ```python
-client = bdclient()
+client = bdclient(
+    api_token="your_token",
+    auto_create_zones=False,          # Else it creates the Zone automatically
+    web_unlocker_zone="custom_zone",  # Custom zone name (serp_zone for search requests)
+)
 ```
+> [!TIP]
+> Hover over the "bdclient" (or over each function in the package) with your cursor to see all its available parameters.
+
 
 ### 2. Scrape Websites
 
@@ -111,18 +119,9 @@ Create a `.env` file in your project root:
 ```env
 BRIGHTDATA_API_TOKEN=your_bright_data_api_token
 WEB_UNLOCKER_ZONE=your_web_unlocker_zone  # Optional
-SERP_ZONE=your_serp_zone                 # Optional
+SERP_ZONE=your_serp_zone                  # Optional
 ```
 
-### Configuration Options
-
-```python
-client = bdclient(
-    api_token="your_token",
-    auto_create_zones=True,           # Automatically create missing zones
-    web_unlocker_zone="custom_zone",  # Custom zone name
-)
-```
 ### Manage Zones
 
 ```python
@@ -140,6 +139,7 @@ bdclient(
     api_token: str = None,
     auto_create_zones: bool = True,
     web_unlocker_zone: str = None,
+    serp_zone: str = None,
 )
 ```
 
