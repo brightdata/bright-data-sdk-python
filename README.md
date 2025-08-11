@@ -8,6 +8,7 @@
 <h3 align="center">A Python SDK for the Bright Data's Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, search engine result parsing, and data management.</h3>
 
 
+For a quick start you can try to run our example files in this repositories under the "Codespace" section.
 
 ## Features
 
@@ -22,13 +23,10 @@
 
 ## Installation
 
-### From PyPI (Coming Soon)
-```bash
-pip install brightdata
-```
-
 ### From GitHub
 ```bash
+# Create and activate a virtual environment
+
 # Install directly from GitHub (recommended)
 pip install git+https://github.com/brightdata/bright-data-sdk-python.git
 
