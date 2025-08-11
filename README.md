@@ -45,9 +45,10 @@ from brightdata import bdclient
 
 # Using API token directly
 client = bdclient(api_token="your_api_token_here")
+```
 
-# Or using environment variables
-# Set BRIGHTDATA_API_TOKEN in your environment or .env file
+Or use by setting BRIGHTDATA_API_TOKEN in .env file
+```python
 client = bdclient()
 ```
 
