@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from brightdata import bdclient
 
-client = bdclient(auto_create_zones=False) #can also be taken from .env file
+client = bdclient(api_token="your-api-token") #can also be taken from .env file
 
 URL = (["https://www.amazon.com/dp/B079QHML21",
         "https://www.ebay.com/itm/365771796300",
