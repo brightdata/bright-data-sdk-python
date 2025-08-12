@@ -91,9 +91,7 @@ queries = ["pizza", "restaurants", "delivery"]
 results = client.search(queries)
 
 # Different search engines
-result = client.search("pizza", search_engine="google")
-result = client.search("pizza", search_engine="bing")
-result = client.search("pizza", search_engine="yandex")
+result = client.search("pizza", search_engine="google") # search_engine can also be set to "yandex" or "bing"
 
 # Custom options
 results = client.search(
