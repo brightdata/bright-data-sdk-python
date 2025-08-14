@@ -17,7 +17,6 @@ For a quick start you can try to run our example files in this repositories unde
 - **Multiple Search Engines**: Support for Google, Bing, and Yandex
 - **Parallel Processing**: Concurrent processing for multiple URLs or queries
 - **Robust Error Handling**: Comprehensive error handling with retry logic
-- **Input Validation**: Automatic validation of URLs, zone names, and parameters
 - **Zone Management**: Automatic zone creation and management
 - **Multiple Output Formats**: JSON, raw HTML, markdown, and more
 
@@ -25,10 +24,8 @@ For a quick start you can try to run our example files in this repositories unde
 
 ### From GitHub
 ```bash
-# Create and activate a virtual environment
-
-# Install directly from GitHub (recommended)
-pip install git+https://github.com/brightdata/bright-data-sdk-python.git
+# In your terminal, create and activate a virtual environment and install the package
+pip install brightdata-sdk
 
 # Or clone and install locally
 git clone https://github.com/brightdata/bright-data-sdk-python.git
