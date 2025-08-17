@@ -21,16 +21,12 @@ For a quick start you can try to run our example files in this repositories unde
 - **Multiple Output Formats**: JSON, raw HTML, markdown, and more
 
 ## Installation
+To install the package, open your terminal:
+> [!NOTE]
+> If you are using macOS you will need to open a virtual environment for your project first.
 
-### From GitHub
 ```bash
-# In your terminal, create and activate a virtual environment and install the package
 pip install brightdata-sdk
-
-# Or clone and install locally
-git clone https://github.com/brightdata/bright-data-sdk-python.git
-cd bright-data-sdk-python
-pip install .
 ```
 
 ## Quick Start
@@ -211,6 +207,18 @@ except Exception as e:
 1. Sign up at [brightdata.com](https://brightdata.com/), and navigate to your dashboard
 2. Create or access your API credentials
 3. Copy your API token and paste it in your .env or code file
+
+## Development
+
+For development installation, open your terminal:
+
+```bash
+git clone https://github.com/brightdata/bright-data-sdk-python.git
+
+# If you are using Mac you will need to open a virtual environment for your project first.
+cd bright-data-sdk-python
+pip install .
+```
 
 ## License
 
