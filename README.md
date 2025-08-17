@@ -4,7 +4,8 @@
   </a>
 </p>
 
-<h1 align="center">Python SDK</h1>
+<img width="1300" height="200" alt="sdk-banner(1)" src="https://github.com/user-attachments/assets/c4a7857e-10dd-420b-947a-ed2ea5825cb8" />
+
 <h3 align="center">A Python SDK for the Bright Data's Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, search engine result parsing, and data management.</h3>
 
 
