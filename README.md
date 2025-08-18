@@ -1,11 +1,7 @@
-<p align="center">
-  <a href="https://brightdata.com/">
-    <img src="https://mintlify.s3.us-west-1.amazonaws.com/brightdata/logo/light.svg" width="300" alt="Bright Data Logo">
-  </a>
-</p>
 
-<h1 align="center">Python SDK</h1>
-<h3 align="center">A Python SDK for the Bright Data's Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, search engine result parsing, and data management.</h3>
+<img width="1300" height="200" alt="sdk-banner(1)" src="https://github.com/user-attachments/assets/c4a7857e-10dd-420b-947a-ed2ea5825cb8" />
+
+<h3 align="center">A Python SDK for the Bright Data's Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, web searches and more.</h3>
 
 
 For a quick start you can try to run our example files in this repositories under the "Codespace" section.
@@ -17,23 +13,16 @@ For a quick start you can try to run our example files in this repositories unde
 - **Multiple Search Engines**: Support for Google, Bing, and Yandex
 - **Parallel Processing**: Concurrent processing for multiple URLs or queries
 - **Robust Error Handling**: Comprehensive error handling with retry logic
-- **Input Validation**: Automatic validation of URLs, zone names, and parameters
 - **Zone Management**: Automatic zone creation and management
 - **Multiple Output Formats**: JSON, raw HTML, markdown, and more
 
 ## Installation
+To install the package, open your terminal:
+> [!NOTE]
+> If you are using macOS you will need to open a virtual environment for your project first.
 
-### From GitHub
 ```bash
-# Create and activate a virtual environment
-
-# Install directly from GitHub (recommended)
-pip install git+https://github.com/brightdata/bright-data-sdk-python.git
-
-# Or clone and install locally
-git clone https://github.com/brightdata/bright-data-sdk-python.git
-cd bright-data-sdk-python
-pip install .
+pip install brightdata-sdk
 ```
 
 ## Quick Start
@@ -91,9 +80,7 @@ queries = ["pizza", "restaurants", "delivery"]
 results = client.search(queries)
 
 # Different search engines
-result = client.search("pizza", search_engine="google")
-result = client.search("pizza", search_engine="bing")
-result = client.search("pizza", search_engine="yandex")
+result = client.search("pizza", search_engine="google") # search_engine can also be set to "yandex" or "bing"
 
 # Custom options
 results = client.search(
@@ -216,6 +203,18 @@ except Exception as e:
 1. Sign up at [brightdata.com](https://brightdata.com/), and navigate to your dashboard
 2. Create or access your API credentials
 3. Copy your API token and paste it in your .env or code file
+
+## Development
+
+For development installation, open your terminal:
+
+```bash
+git clone https://github.com/brightdata/bright-data-sdk-python.git
+
+# If you are using Mac you will need to open a virtual environment for your project first.
+cd bright-data-sdk-python
+pip install .
+```
 
 ## License
 
