@@ -1,53 +1,66 @@
 """
-Basic tests for the Bright Data SDK client.
+Comprehensive tests for the Bright Data SDK client.
 
-These are placeholder tests to demonstrate the testing structure.
-Full implementation would require mock responses and environment setup.
+This test suite covers:
+- Client initialization with API tokens (from parameter and environment)
+- API token validation and error handling for missing tokens
+- Zone configuration (default and custom zone names)
+- URL validation in scrape method (scheme requirement)
+- Search query validation (empty query handling)
+- Search engine validation (unsupported engine handling)
+
+All tests are designed to run without requiring real API tokens by:
+- Using sufficiently long test tokens to pass validation
+- Mocking zone management to avoid network calls
+- Testing validation logic and error messages
 """
 
 import pytest
 import os
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from brightdata import bdclient
-from brightdata.exceptions import ValidationError, AuthenticationError
+from brightdata.exceptions import ValidationError
 
 
 class TestBdClient:
     """Test cases for the main bdclient class"""
     
-    def test_client_init_with_token(self):
+    @patch('brightdata.utils.zone_manager.ZoneManager.ensure_required_zones')
+    def test_client_init_with_token(self, mock_zones):
         """Test client initialization with API token"""
         with patch.dict(os.environ, {}, clear=True):
-            client = bdclient(api_token="test_token", auto_create_zones=False)
-            assert client.api_token == "test_token"
+            client = bdclient(api_token="valid_test_token_12345678", auto_create_zones=False)
+            assert client.api_token == "valid_test_token_12345678"
     
-    def test_client_init_from_env(self):
+    @patch('brightdata.utils.zone_manager.ZoneManager.ensure_required_zones')
+    def test_client_init_from_env(self, mock_zones):
         """Test client initialization from environment variable"""
-        with patch.dict(os.environ, {"BRIGHTDATA_API_TOKEN": "env_token"}):
+        with patch.dict(os.environ, {"BRIGHTDATA_API_TOKEN": "valid_env_token_12345678"}):
             client = bdclient(auto_create_zones=False)
-            assert client.api_token == "env_token"
+            assert client.api_token == "valid_env_token_12345678"
     
     def test_client_init_no_token_raises_error(self):
         """Test that missing API token raises ValidationError"""
         with patch.dict(os.environ, {}, clear=True):
-            # Mock dotenv to prevent loading .env file
             with patch('dotenv.load_dotenv'):
                 with pytest.raises(ValidationError, match="API token is required"):
                     bdclient()
     
-    def test_client_zone_defaults(self):
+    @patch('brightdata.utils.zone_manager.ZoneManager.ensure_required_zones')
+    def test_client_zone_defaults(self, mock_zones):
         """Test default zone configurations"""
         with patch.dict(os.environ, {}, clear=True):
-            client = bdclient(api_token="test_token", auto_create_zones=False)
+            client = bdclient(api_token="valid_test_token_12345678", auto_create_zones=False)
             assert client.web_unlocker_zone == "sdk_unlocker"
             assert client.serp_zone == "sdk_serp"
     
-    def test_client_custom_zones(self):
+    @patch('brightdata.utils.zone_manager.ZoneManager.ensure_required_zones')
+    def test_client_custom_zones(self, mock_zones):
         """Test custom zone configuration"""
         with patch.dict(os.environ, {}, clear=True):
             client = bdclient(
-                api_token="test_token",
+                api_token="valid_test_token_12345678",
                 web_unlocker_zone="custom_unlocker",
                 serp_zone="custom_serp",
                 auto_create_zones=False
@@ -60,25 +73,26 @@ class TestClientMethods:
     """Test cases for client methods with mocked responses"""
     
     @pytest.fixture
-    def client(self):
-        """Create a test client with mocked session"""
+    @patch('brightdata.utils.zone_manager.ZoneManager.ensure_required_zones')
+    def client(self, mock_zones):
+        """Create a test client with mocked validation"""
         with patch.dict(os.environ, {}, clear=True):
-            client = bdclient(api_token="test_token", auto_create_zones=False)
+            client = bdclient(api_token="valid_test_token_12345678", auto_create_zones=False)
             return client
     
     def test_scrape_single_url_validation(self, client):
         """Test URL validation in scrape method"""
-        with pytest.raises(ValidationError, match="Invalid URL format"):
+        with pytest.raises(ValidationError, match="URL must include a scheme"):
             client.scrape("not_a_url")
     
     def test_search_empty_query_validation(self, client):
         """Test query validation in search method"""
-        with pytest.raises(ValidationError, match="Query must be a non-empty string"):
+        with pytest.raises(ValidationError, match="cannot be empty"):
             client.search("")
     
     def test_search_unsupported_engine(self, client):
         """Test unsupported search engine validation"""
-        with pytest.raises(ValidationError, match="Unsupported search engine"):
+        with pytest.raises(ValidationError, match="Invalid search engine"):
             client.search("test query", search_engine="invalid_engine")
 
 

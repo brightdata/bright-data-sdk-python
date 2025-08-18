@@ -8,7 +8,20 @@ from .api import WebScraper, SearchAPI
 from .utils import ZoneManager, setup_logging, get_logger
 from .exceptions import ValidationError, AuthenticationError, APIError
 
-__version__ = "1.0.1"
+def _get_version():
+    """Get version from __init__.py, cached at module import time."""
+    try:
+        import os
+        init_file = os.path.join(os.path.dirname(__file__), '__init__.py')
+        with open(init_file, 'r', encoding='utf-8') as f:
+            for line in f:
+                if line.startswith('__version__'):
+                    return line.split('"')[1]
+    except (OSError, IndexError):
+        pass
+    return "unknown"
+
+__version__ = _get_version()
 
 logger = get_logger('client')
 
