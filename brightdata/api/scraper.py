@@ -26,9 +26,9 @@ class WebScraper:
         self,
         url: Union[str, List[str]],
         zone: str,
-        response_format: str = "json",
+        response_format: str = "raw",
         method: str = "GET", 
-        country: str = "us",
+        country: str = "",
         data_format: str = "markdown",
         async_request: bool = False,
         max_workers: int = 10,
@@ -42,10 +42,10 @@ class WebScraper:
         **Parameters:**
         - `url` (str | List[str]): Single URL string or list of URLs to scrape
         - `zone` (str): Your Bright Data zone identifier 
-        - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"json"`)
+        - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"raw"`)
         - `method` (str, optional): HTTP method for the request (default: `"GET"`)
         - `country` (str, optional): Two-letter ISO country code for proxy location (default: `"us"`)
-        - `data_format` (str, optional): Additional format transformation (default: `"markdown"`)
+        - `data_format` (str, optional): Additional format transformation (default: `"html"`)
         - `async_request` (bool, optional): Enable asynchronous processing (default: `False`)
         - `max_workers` (int, optional): Maximum parallel workers for multiple URLs (default: `10`)
         - `timeout` (int, optional): Request timeout in seconds (default: `30`)
@@ -142,7 +142,6 @@ class WebScraper:
             "url": url,
             "format": response_format,
             "method": method,
-            "country": country,
             "data_format": data_format
         }
         

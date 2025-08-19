@@ -66,8 +66,11 @@ def validate_country_code(country: str) -> None:
         raise ValidationError(f"Country code must be a string, got {type(country).__name__}")
     
     country = country.strip().lower()
+    if len(country) == 0:
+        return
+    
     if len(country) != 2:
-        raise ValidationError("Country code must be exactly 2 characters (ISO 3166-1 alpha-2)")
+        raise ValidationError("Country code must be exactly 2 characters (ISO 3166-1 alpha-2) or empty")
     
     if not country.isalpha():
         raise ValidationError("Country code must contain only letters")

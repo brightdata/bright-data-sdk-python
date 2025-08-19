@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "brightdata-sdk"
-version = "1.0.2"
+version = "1.0.3"
 description = "Python SDK for Bright Data Web Scraping and SERP APIs"
 authors = [
     {name = "Bright Data", email = "support@brightdata.com"}
@@ -52,11 +52,11 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/brightdata/brightdata-sdk-python"
-Documentation = "https://github.com/brightdata/brightdata-sdk-python#readme"
-Repository = "https://github.com/brightdata/brightdata-sdk-python"
-"Bug Reports" = "https://github.com/brightdata/brightdata-sdk-python/issues"
-Changelog = "https://github.com/brightdata/brightdata-sdk-python/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/brightdata/bright-data-sdk-python"
+Documentation = "https://github.com/brightdata/bright-data-sdk-python#readme"
+Repository = "https://github.com/brightdata/bright-data-sdk-python"
+"Bug Reports" = "https://github.com/brightdata/bright-data-sdk-python/issues"
+Changelog = "https://github.com/brightdata/bright-data-sdk-python/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 include = ["brightdata*"]

@@ -29,9 +29,9 @@ class SearchAPI:
         query: Union[str, List[str]],
         search_engine: str = "google",
         zone: str = None,
-        response_format: str = "json",
+        response_format: str = "raw",
         method: str = "GET",
-        country: str = "us",
+        country: str = "",
         data_format: str = "markdown",
         async_request: bool = False,
         max_workers: int = 10,
@@ -47,7 +47,7 @@ class SearchAPI:
         - `query` (str | List[str]): Search query string or list of search queries
         - `search_engine` (str, optional): Search engine to use - `"google"`, `"bing"`, or `"yandex"` (default: `"google"`)
         - `zone` (str, optional): Your Bright Data zone identifier (default: `None`)
-        - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"json"`)
+        - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"raw"`)
         - `method` (str, optional): HTTP method for the request (default: `"GET"`)
         - `country` (str, optional): Two-letter ISO country code for proxy location (default: `"us"`)
         - `data_format` (str, optional): Additional format transformation (default: `"markdown"`)
@@ -161,7 +161,6 @@ class SearchAPI:
             "url": url,
             "format": response_format,
             "method": method,
-            "country": country,
             "data_format": data_format
         }
         

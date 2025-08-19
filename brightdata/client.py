@@ -138,9 +138,9 @@ class bdclient:
         self,
         url: Union[str, List[str]],
         zone: str = None,
-        response_format: str = "json",
+        response_format: str = "raw",
         method: str = "GET", 
-        country: str = "us",
+        country: str = "",
         data_format: str = "markdown",
         async_request: bool = False,
         max_workers: int = None,
@@ -156,7 +156,7 @@ class bdclient:
         - `zone` (str, optional): Zone identifier (default: auto-configured web_unlocker_zone)
         - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"json"`)
         - `method` (str, optional): HTTP method for the request (default: `"GET"`)
-        - `country` (str, optional): Two-letter ISO country code for proxy location (default: `"us"`)
+        - `country` (str, optional): Two-letter ISO country code for proxy location (defaults to fastest connection)
         - `data_format` (str, optional): Additional format transformation (default: `"markdown"`)
         - `async_request` (bool, optional): Enable asynchronous processing (default: `False`)
         - `max_workers` (int, optional): Maximum parallel workers for multiple URLs (default: `10`)
@@ -201,9 +201,9 @@ class bdclient:
         query: Union[str, List[str]],
         search_engine: str = "google",
         zone: str = None,
-        response_format: str = "json",
+        response_format: str = "raw",
         method: str = "GET",
-        country: str = "us",
+        country: str = "",
         data_format: str = "markdown",
         async_request: bool = False,
         max_workers: int = None,
