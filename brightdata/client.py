@@ -207,7 +207,8 @@ class bdclient:
         data_format: str = "markdown",
         async_request: bool = False,
         max_workers: int = None,
-        timeout: int = None
+        timeout: int = None,
+        parse: bool = False
     ) -> Union[Dict[str, Any], str, List[Union[Dict[str, Any], str]]]:
         """
         ## Search the web using Bright Data SERP API
@@ -226,6 +227,7 @@ class bdclient:
         - `async_request` (bool, optional): Enable asynchronous processing (default: `False`)
         - `max_workers` (int, optional): Maximum parallel workers for multiple queries (default: `10`)
         - `timeout` (int, optional): Request timeout in seconds (default: `30`)
+        - `parse` (bool, optional): Enable JSON parsing by adding brd_json=1 to URL (default: `False`)
         
         ### Returns:
         - Single query: `Dict[str, Any]` if `response_format="json"`, `str` if `response_format="raw"`
@@ -264,7 +266,7 @@ class bdclient:
         
         return self.search_api.search(
             query, search_engine, zone, response_format, method, country,
-            data_format, async_request, max_workers, timeout
+            data_format, async_request, max_workers, timeout, parse
         )
 
     def download_content(self, content: Union[Dict, str], filename: str = None, format: str = "json") -> str:

@@ -5,12 +5,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from brightdata import bdclient
 
-client = bdclient(api_token="your-api-key",auto_create_zones=False, serp_zone="your-custom-serp-zone") # zone and API token can also be defined in .env file
+client = bdclient(api_token="your-api-token", auto_create_zones=False, serp_zone="your-custom-serp-zone") # zone and API token can also be defined in .env file
 
 query = ["iphone 16", "coffee maker", "portable projector", "sony headphones",
         "laptop stand", "power bank", "running shoes", "android tablet",
         "hiking backpack", "dash cam"]
 
-results = client.search(query, search_engine="bing", max_workers=10)
+results = client.search(query, max_workers=10)
 
-print(results)
+client.download_content(results)

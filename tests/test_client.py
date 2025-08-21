@@ -94,6 +94,27 @@ class TestClientMethods:
         """Test unsupported search engine validation"""
         with pytest.raises(ValidationError, match="Invalid search engine"):
             client.search("test query", search_engine="invalid_engine")
+    
+    def test_search_with_parse_parameter(self, client, monkeypatch):
+        """Test search with parse parameter adds brd_json=1 to URL"""
+        # Mock the session.post method to capture the request
+        captured_request = {}
+        
+        def mock_post(*args, **kwargs):
+            captured_request.update(kwargs)
+            from unittest.mock import Mock
+            response = Mock()
+            response.status_code = 200
+            response.text = "mocked html response"
+            return response
+        
+        monkeypatch.setattr(client.search_api.session, 'post', mock_post)
+        
+        result = client.search("test query", parse=True)
+        
+        # Verify the request was made with correct URL containing &brd_json=1
+        request_data = captured_request.get('json', {})
+        assert "&brd_json=1" in request_data["url"]
 
 
 if __name__ == "__main__":

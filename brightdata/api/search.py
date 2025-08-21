@@ -35,7 +35,8 @@ class SearchAPI:
         data_format: str = "markdown",
         async_request: bool = False,
         max_workers: int = 10,
-        timeout: int = None
+        timeout: int = None,
+        parse: bool = False
     ) -> Union[Dict[str, Any], str, List[Union[Dict[str, Any], str]]]:
         """
         ## Search the web using Bright Data SERP API
@@ -54,6 +55,7 @@ class SearchAPI:
         - `async_request` (bool, optional): Enable asynchronous processing (default: `False`)
         - `max_workers` (int, optional): Maximum parallel workers for multiple queries (default: `10`)
         - `timeout` (int, optional): Request timeout in seconds (default: `30`)
+        - `parse` (bool, optional): Enable JSON parsing by adding brd_json=1 to URL (default: `False`)
         
         ### Returns:
         - Single query: `Dict[str, Any]` if `response_format="json"`, `str` if `response_format="raw"`
@@ -116,7 +118,7 @@ class SearchAPI:
                     executor.submit(
                         self._perform_single_search,
                         single_query, zone, response_format, method, country,
-                        data_format, async_request, base_url, timeout
+                        data_format, async_request, base_url, timeout, parse
                     ): i
                     for i, single_query in enumerate(query)
                 }
@@ -133,7 +135,7 @@ class SearchAPI:
         else:
             return self._perform_single_search(
                 query, zone, response_format, method, country, 
-                data_format, async_request, base_url, timeout
+                data_format, async_request, base_url, timeout, parse
             )
 
     def _perform_single_search(
@@ -146,13 +148,17 @@ class SearchAPI:
         data_format: str,
         async_request: bool,
         base_url: str,
-        timeout: int
+        timeout: int,
+        parse: bool
     ) -> Union[Dict[str, Any], str]:
         """
         Perform a single search operation
         """
         encoded_query = quote_plus(query)
         url = f"{base_url}{encoded_query}"
+        
+        if parse:
+            url += "&brd_json=1"
         
         endpoint = "https://api.brightdata.com/request"
         
