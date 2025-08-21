@@ -47,31 +47,21 @@ class ZoneManager:
             zone_name: Name for the new zone
             zone_type: Type of zone ('unblocker' or 'serp')
         """
+        if zone_type == "serp":
+            plan_config = {
+                "type": "unblocker",
+                "serp": True
+            }
+        else:
+            plan_config = {
+                "type": zone_type
+            }
+            
         payload = {
+            "plan": plan_config,
             "zone": {
                 "name": zone_name,
                 "type": zone_type
-            },
-            "plan": {
-                "type": "static",
-                "ips_type": "shared",
-                "bandwidth": "1",
-                "ip_alloc_preset": "shared_block",
-                "ips": 0,
-                "country": "any",
-                "country_city": "any",
-                "mobile": "false",
-                "serp": "false",
-                "city": "false",
-                "asn": "false",
-                "vip": "false",
-                "vips_type": "shared",
-                "vips": "0",
-                "vip_country": "any",
-                "vip_country_city": "any",
-                "ub_premium": False,
-                "solve_captcha_disable": True,
-                "custom_headers": False
             }
         }
         

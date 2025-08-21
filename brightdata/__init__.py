@@ -32,7 +32,7 @@ from .exceptions import (
     APIError
 )
 
-__version__ = "1.0.4"
+__version__ = "1.0.5"
 __author__ = "Bright Data"
 __email__ = "support@brightdata.com"
 
