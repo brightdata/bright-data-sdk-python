@@ -166,29 +166,11 @@ Save content to local file.
 - `format`: File format ("json", "csv", "txt", etc.)
 ```
 
-#### list_zones()
-
-List all active zones in your Bright Data account.
-
 ## Error Handling
 
-The SDK includes built-in input validation and retry logic:
-```python
-try:
-    result = client.scrape("https://example.com")
-except ValueError as e:
-    print(f"Invalid input: {e}")
-except Exception as e:
-    print(f"API error: {e}")
-```
+The SDK includes built-in input validation and retry logic
 
-## Production Features
-
-- **Retry Logic**: Automatic retries with exponential backoff for network failures
-- **Input Validation**: Validates URLs, zone names, and parameters
-- **Connection Pooling**: Efficient HTTP connection management
-- **Logging**: Comprehensive logging for debugging and monitoring
-- **Zone Auto-Creation**: Automatically creates required zones if they don't exist
+In case of zone related problems, use the **list_zones()** function to check your active zones, and check that your [**account settings**](https://brightdata.com/cp/setting/users), to verify that your API key have **"admin permissions"**.
 
 ## Configuration Constants
 
@@ -199,31 +181,6 @@ except Exception as e:
 | `CONNECTION_POOL_SIZE` | `20`    | Max concurrent HTTP connections |
 | `MAX_RETRIES`          | `3`     | Retry attempts on failure       |
 | `RETRY_BACKOFF_FACTOR` | `1.5`   | Exponential backoff multiplier  |
-
-## Getting Your API Token
-
-1. Sign up at [brightdata.com](https://brightdata.com/), and navigate to your dashboard
-2. Create or access your API credentials
-3. Copy your API token and paste it in your .env or code file
-
-## Development
-
-For development installation, open your terminal:
-
-```bash
-git clone https://github.com/brightdata/bright-data-sdk-python.git
-
-# If you are using Mac you will need to open a virtual environment for your project first.
-cd bright-data-sdk-python
-pip install .
-```
-
-> [!IMPORTANT]
-> Go to your [**account settings**](https://brightdata.com/cp/setting/users), to verify that your API key have **"admin permissions"**.
-
-## License
-
-This project is licensed under the MIT License.
 
 ## Support
 
