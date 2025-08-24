@@ -1,9 +1,11 @@
 
 <img width="1300" height="200" alt="sdk-banner(1)" src="https://github.com/user-attachments/assets/c4a7857e-10dd-420b-947a-ed2ea5825cb8" />
 
-<h3 align="center">A Python SDK for the Bright Data's Data extraction and Web unlocking tools, providing easy-to-use scalable methods for web scraping, web searches and more.</h3>
-
-For a quick start run this repo's example files "Codespace" section.
+```python
+pip install brightdata-sdk
+```
+<h3 align="center">A Python SDK by Bright Data, providing easy-to-use scalable methods for web search and scraping.</h3>
+<p></p>
 
 ## Features
 
@@ -20,8 +22,8 @@ To install the package, open your terminal:
 
 ```python
 pip install brightdata-sdk
-# If using macOS, first open a virtual environment for your project.
 ```
+> If using macOS, first open a virtual environment for your project
 
 ## Quick Start
 
@@ -97,46 +99,27 @@ result = client.scrape(
 ```python
 # Download scraped content
 data = client.scrape("https://example.com")
-client.download_content(data, "results.json", "json") # Auto-generate filename if not specified
+client.download_content(data) 
 ```
 
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file in your project root:
-
-```env
-BRIGHTDATA_API_TOKEN=your_bright_data_api_token
-WEB_UNLOCKER_ZONE=your_web_unlocker_zone  # Optional
-SERP_ZONE=your_serp_zone                  # Optional
-```
-
-### Manage Zones
+## Function Parameters
+<details>
+    <summary>🔍 <strong>Search(...)</strong></summary>
+    
+Searches using the SERP API. Accepts the same arguments as scrape(), plus:
 
 ```python
-# List all active zones
-zones = client.list_zones()
-print(f"Found {len(zones)} zones")
+- `query`: Search query string or list of queries
+- `search_engine`: "google", "bing", or "yandex"
+- Other parameters same as scrape()
 ```
+    
+</details>
+<details>
+    <summary>🔗 <strong>scrape(...)</strong></summary>
 
-## API Reference
-
-### bdclient Class
-
-```python
-bdclient(
-    api_token: str = None,
-    auto_create_zones: bool = True,
-    web_unlocker_zone: str = None,
-    serp_zone: str = None,
-)
-```
-
-### Key Methods
-
-#### scrape(...)
 Scrapes a single URL or list of URLs using the Web Unlocker.
+
 ```python
 - `url`: Single URL string or list of URLs
 - `zone`: Zone identifier (auto-configured if None)
@@ -149,30 +132,23 @@ Scrapes a single URL or list of URLs using the Web Unlocker.
 - `timeout`: Request timeout in seconds (default: 30)
 ```
 
-#### search(...)
-Searches using the SERP API. Accepts the same arguments as scrape(), plus:
-```python
-- `query`: Search query string or list of queries
-- `search_engine`: "google", "bing", or "yandex"
-- Other parameters same as scrape()
-```
-
-#### download_content(...)
+</details>
+<details>
+    <summary>💾 <strong>Download_Content(...)</strong></summary>
 
 Save content to local file.
+
 ```python
 - `content`: Content to save
 - `filename`: Output filename (auto-generated if None)
 - `format`: File format ("json", "csv", "txt", etc.)
 ```
 
-## Error Handling
+</details>
+<details>
+    <summary>⚙️ <strong>Configuration Constants</strong></summary>
 
-The SDK includes built-in input validation and retry logic
-
-In case of zone related problems, use the **list_zones()** function to check your active zones, and check that your [**account settings**](https://brightdata.com/cp/setting/users), to verify that your API key have **"admin permissions"**.
-
-## Configuration Constants
+<p></p>
 
 | Constant               | Default | Description                     |
 | ---------------------- | ------- | ------------------------------- |
@@ -181,6 +157,60 @@ In case of zone related problems, use the **list_zones()** function to check you
 | `CONNECTION_POOL_SIZE` | `20`    | Max concurrent HTTP connections |
 | `MAX_RETRIES`          | `3`     | Retry attempts on failure       |
 | `RETRY_BACKOFF_FACTOR` | `1.5`   | Exponential backoff multiplier  |
+
+</details>
+
+##  Advanced Configuration
+
+<details>
+    <summary>🔧 <strong>Environment Variables</strong></summary>
+
+Create a `.env` file in your project root:
+
+```env
+BRIGHTDATA_API_TOKEN=your_bright_data_api_token
+WEB_UNLOCKER_ZONE=your_web_unlocker_zone  # Optional
+SERP_ZONE=your_serp_zone                  # Optional
+```
+
+</details>
+<details>
+    <summary>🌐 <strong>Manage Zones</strong></summary>
+
+List all active zones
+
+```python
+# List all active zones
+zones = client.list_zones()
+print(f"Found {len(zones)} zones")
+```
+
+</details>
+<details>
+    <summary>👥 <strong>Client Management</strong></summary>
+    
+bdclient Class
+    
+```python
+bdclient(
+    api_token: str = None,
+    auto_create_zones: bool = True,
+    web_unlocker_zone: str = None,
+    serp_zone: str = None,
+)
+```
+    
+</details>
+<details>
+    <summary>⚠️ <strong>Error Handling</strong></summary>
+    
+bdclient Class
+    
+The SDK includes built-in input validation and retry logic
+
+In case of zone related problems, use the **list_zones()** function to check your active zones, and check that your [**account settings**](https://brightdata.com/cp/setting/users), to verify that your API key have **"admin permissions"**.
+    
+</details>
 
 ## Support
 
