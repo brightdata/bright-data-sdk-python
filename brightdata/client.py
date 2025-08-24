@@ -141,7 +141,7 @@ class bdclient:
         response_format: str = "raw",
         method: str = "GET", 
         country: str = "",
-        data_format: str = "markdown",
+        data_format: str = "html",
         async_request: bool = False,
         max_workers: int = None,
         timeout: int = None
@@ -154,10 +154,10 @@ class bdclient:
         ### Parameters:
         - `url` (str | List[str]): Single URL string or list of URLs to scrape
         - `zone` (str, optional): Zone identifier (default: auto-configured web_unlocker_zone)
-        - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"json"`)
+        - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"raw"`)
         - `method` (str, optional): HTTP method for the request (default: `"GET"`)
         - `country` (str, optional): Two-letter ISO country code for proxy location (defaults to fastest connection)
-        - `data_format` (str, optional): Additional format transformation (default: `"markdown"`)
+        - `data_format` (str, optional): Additional format transformation (default: `"html"`)
         - `async_request` (bool, optional): Enable asynchronous processing (default: `False`)
         - `max_workers` (int, optional): Maximum parallel workers for multiple URLs (default: `10`)
         - `timeout` (int, optional): Request timeout in seconds (default: `30`)
@@ -204,7 +204,7 @@ class bdclient:
         response_format: str = "raw",
         method: str = "GET",
         country: str = "",
-        data_format: str = "markdown",
+        data_format: str = "html",
         async_request: bool = False,
         max_workers: int = None,
         timeout: int = None,
@@ -220,10 +220,10 @@ class bdclient:
         - `query` (str | List[str]): Search query string or list of search queries
         - `search_engine` (str, optional): Search engine to use - `"google"`, `"bing"`, or `"yandex"` (default: `"google"`)
         - `zone` (str, optional): Zone identifier (default: auto-configured serp_zone)
-        - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"json"`)
+        - `response_format` (str, optional): Response format - `"json"` for structured data, `"raw"` for HTML string (default: `"raw"`)
         - `method` (str, optional): HTTP method for the request (default: `"GET"`)
         - `country` (str, optional): Two-letter ISO country code for proxy location (default: `"us"`)
-        - `data_format` (str, optional): Additional format transformation (default: `"markdown"`)
+        - `data_format` (str, optional): Additional format transformation (default: `"html"`)
         - `async_request` (bool, optional): Enable asynchronous processing (default: `False`)
         - `max_workers` (int, optional): Maximum parallel workers for multiple queries (default: `10`)
         - `timeout` (int, optional): Request timeout in seconds (default: `30`)
