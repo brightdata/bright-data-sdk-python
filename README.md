@@ -4,7 +4,7 @@
 ```python
 pip install brightdata-sdk
 ```
-<h3 align="center">A Python SDK by Bright Data, providing easy-to-use scalable methods for web search and scraping.</h3>
+<h3 align="center">Python SDK by Bright Data, providing easy-to-use scalable methods for web search & scraping.</h3>
 <p></p>
 
 ## Features
