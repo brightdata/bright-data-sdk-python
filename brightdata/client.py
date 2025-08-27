@@ -6,6 +6,8 @@ from typing import Union, Dict, Any, List
 
 from .api import WebScraper, SearchAPI
 from .api.chatgpt import ChatGPTAPI
+from .api.linkedin import LinkedInAPI, LinkedInScraper, LinkedInSearcher
+from .api.download import DownloadAPI
 from .utils import ZoneManager, setup_logging, get_logger
 from .exceptions import ValidationError, AuthenticationError, APIError
 
@@ -31,7 +33,7 @@ class bdclient:
     """Main client for the Bright Data SDK"""
     
     DEFAULT_MAX_WORKERS = 10
-    DEFAULT_TIMEOUT = 30
+    DEFAULT_TIMEOUT = 65
     CONNECTION_POOL_SIZE = 20
     MAX_RETRIES = 3
     RETRY_BACKOFF_FACTOR = 1.5
@@ -134,6 +136,18 @@ class bdclient:
             self.DEFAULT_TIMEOUT,
             self.MAX_RETRIES,
             self.RETRY_BACKOFF_FACTOR
+        )
+        self.linkedin_api = LinkedInAPI(
+            self.session,
+            self.api_token,
+            self.DEFAULT_TIMEOUT,
+            self.MAX_RETRIES,
+            self.RETRY_BACKOFF_FACTOR
+        )
+        self.download_api = DownloadAPI(
+            self.session,
+            self.api_token,
+            self.DEFAULT_TIMEOUT
         )
         
         if self.auto_create_zones:
@@ -290,73 +304,51 @@ class bdclient:
         ### Returns:
             Path to the downloaded file
         """
-        
-        if not filename:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"brightdata_results_{timestamp}.{format}"
-        
-        if not filename.endswith(f".{format}"):
-            filename = f"{filename}.{format}"
-        
-        # Parse JSON strings in body fields if requested
-        if parse and isinstance(content, (list, dict)):
-            content = self._parse_body_json(content)
-        
-        try:
-            if format == "json":
-                with open(filename, 'w', encoding='utf-8') as f:
-                    if isinstance(content, dict) or isinstance(content, list):
-                        json.dump(content, f, indent=2, ensure_ascii=False)
-                    else:
-                        f.write(str(content))
-            else:
-                with open(filename, 'w', encoding='utf-8') as f:
-                    f.write(str(content))
-            
-            logger.info(f"Content downloaded to: {filename}")
-            return filename
-            
-        except IOError as e:
-            raise APIError(f"Failed to write file {filename}: {str(e)}")
-        except json.JSONEncodeError as e:
-            raise APIError(f"Failed to encode JSON content: {str(e)}")
-        except Exception as e:
-            raise APIError(f"Failed to download content: {str(e)}")
+        return self.download_api.download_content(content, filename, format, parse)
     
 
-    def scrape_chatGPT(
+    def search_chatGPT(
         self,
         prompt: Union[str, List[str]],
         country: Union[str, List[str]] = "",
         additional_prompt: Union[str, List[str]] = "",
-        web_search: Union[bool, List[bool]] = False
+        web_search: Union[bool, List[bool]] = False,
+        sync: bool = True
     ) -> Dict[str, Any]:
         """
-        ## Scrape ChatGPT responses using Bright Data's ChatGPT dataset API
+        ## Search ChatGPT responses using Bright Data's ChatGPT dataset API
         
         Sends one or multiple prompts to ChatGPT through Bright Data's proxy network 
-        and automatically prints the snapshot ID for easy copy/paste into download function.
+        with support for both synchronous and asynchronous processing.
         
         ### Parameters:
         - `prompt` (str | List[str]): Single prompt string or list of prompts to send to ChatGPT
         - `country` (str | List[str], optional): Two-letter ISO country code(s) for proxy location (default: "")
         - `additional_prompt` (str | List[str], optional): Follow-up prompt(s) after receiving the first answer (default: "")
         - `web_search` (bool | List[bool], optional): Whether to click the web search button in ChatGPT (default: False)
+        - `sync` (bool, optional): If True (default), returns data immediately. If False, returns snapshot_id for async processing
         
         ### Returns:
-        - `Dict[str, Any]`: Response containing snapshot_id and other metadata for tracking the request
+        - `Dict[str, Any]`: If sync=True, returns ChatGPT response data directly. If sync=False, returns response with snapshot_id for async processing
         
         ### Example Usage:
         ```python
-        # Single prompt
-        result = client.scrape_chatGPT(prompt="Top hotels in New York")
+        # Single prompt (synchronous - returns data immediately)
+        result = client.search_chatGPT(prompt="Top hotels in New York")
         
-        # Multiple prompts
-        result = client.scrape_chatGPT(
+        # Multiple prompts (synchronous - returns data immediately)
+        result = client.search_chatGPT(
             prompt=["Top hotels in New York", "Best restaurants in Paris", "Tourist attractions in Tokyo"],
             additional_prompt=["Are you sure?", "", "What about hidden gems?"]
         )
-        # Snapshot ID is automatically printed
+        
+        # Asynchronous with web search enabled (returns snapshot_id)
+        result = client.search_chatGPT(
+            prompt="Latest AI developments", 
+            web_search=True,
+            sync=False
+        )
+        # Snapshot ID is automatically printed for async requests
         ```
         
         ### Raises:
@@ -410,8 +402,91 @@ class bdclient:
             countries, 
             additional_prompts, 
             web_searches,
+            sync,
             self.DEFAULT_TIMEOUT
         )
+
+    @property
+    def scrape_linkedin(self):
+        """
+        ## LinkedIn Data Scraping Interface
+        
+        Provides specialized methods for scraping different types of LinkedIn data
+        using Bright Data's collect API with pre-configured dataset IDs.
+        
+        ### Available Methods:
+        - `profiles(url)` - Scrape LinkedIn profile data
+        - `companies(url)` - Scrape LinkedIn company data  
+        - `jobs(url)` - Scrape LinkedIn job listing data
+        - `posts(url)` - Scrape LinkedIn post content
+        
+        ### Example Usage:
+        ```python
+        # Scrape LinkedIn profiles
+        result = client.scrape_linkedin.profiles("https://www.linkedin.com/in/username/")
+        
+        # Scrape multiple companies
+        companies = [
+            "https://www.linkedin.com/company/ibm",
+            "https://www.linkedin.com/company/bright-data"
+        ]
+        result = client.scrape_linkedin.companies(companies)
+        
+        # Scrape job listings
+        result = client.scrape_linkedin.jobs("https://www.linkedin.com/jobs/view/123456/")
+        
+        # Scrape posts
+        result = client.scrape_linkedin.posts("https://www.linkedin.com/posts/user-activity-123/")
+        ```
+        
+        ### Returns:
+        Each method returns a `Dict[str, Any]` containing snapshot_id and metadata for tracking the request.
+        Use the snapshot_id with `download_snapshot()` to retrieve the collected data.
+        """
+        if not hasattr(self, '_linkedin_scraper'):
+            self._linkedin_scraper = LinkedInScraper(self.linkedin_api)
+        return self._linkedin_scraper
+
+    @property
+    def search_linkedin(self):
+        """
+        ## LinkedIn Data Search Interface
+        
+        Provides specialized methods for discovering new LinkedIn data by various search criteria
+        using Bright Data's collect API with pre-configured dataset IDs.
+        
+        ### Available Methods:
+        - `profiles(first_name, last_name)` - Search LinkedIn profiles by name
+        - `jobs(url=..., location=...)` - Search LinkedIn jobs by URL or keyword criteria
+        - `posts(profile_url=..., company_url=..., url=...)` - Search LinkedIn posts by various methods
+        
+        ### Example Usage:
+        ```python
+        # Search profiles by name
+        result = client.search_linkedin.profiles("James", "Smith")
+        
+        # Search jobs by location and keywords
+        result = client.search_linkedin.jobs(
+            location="Paris", 
+            keyword="product manager", 
+            country="FR"
+        )
+        
+        # Search posts by profile URL with date range
+        result = client.search_linkedin.posts(
+            profile_url="https://www.linkedin.com/in/username",
+            start_date="2018-04-25T00:00:00.000Z",
+            end_date="2021-05-25T00:00:00.000Z"
+        )
+        ```
+        
+        ### Returns:
+        Each method returns a `Dict[str, Any]` containing snapshot_id (async) or direct data (sync) for tracking the request.
+        Use the snapshot_id with `download_snapshot()` to retrieve the collected data.
+        """
+        if not hasattr(self, '_linkedin_searcher'):
+            self._linkedin_searcher = LinkedInSearcher(self.linkedin_api)
+        return self._linkedin_searcher
 
     def download_snapshot(
         self,
@@ -458,136 +533,8 @@ class bdclient:
         - `AuthenticationError`: Invalid API token or insufficient permissions
         - `APIError`: Request failed, snapshot not found, or server error
         """
-        if not snapshot_id or not isinstance(snapshot_id, str):
-            raise ValidationError("Snapshot ID is required and must be a non-empty string")
-        
-        if format not in ["json", "ndjson", "jsonl", "csv"]:
-            raise ValidationError("Format must be one of: json, ndjson, jsonl, csv")
-        
-        if not isinstance(compress, bool):
-            raise ValidationError("Compress must be a boolean")
-        
-        if batch_size is not None:
-            if not isinstance(batch_size, int) or batch_size < 1000:
-                raise ValidationError("Batch size must be an integer >= 1000")
-        
-        if part is not None:
-            if not isinstance(part, int) or part < 1:
-                raise ValidationError("Part must be a positive integer")
-            if batch_size is None:
-                raise ValidationError("Part parameter requires batch_size to be specified")
-        
-        url = f"https://api.brightdata.com/datasets/v3/snapshot/{snapshot_id}"
-        headers = {
-            "Authorization": f"Bearer {self.api_token}"
-        }
-        
-        params = {}
-        if format != "json":  # Only add format if not default
-            params["format"] = format
-        if compress:
-            params["compress"] = str(compress).lower()
-        if batch_size is not None:
-            params["batch_size"] = batch_size
-        if part is not None:
-            params["part"] = part
-        
-        try:
-            response = self.session.get(url, headers=headers, params=params, timeout=self.DEFAULT_TIMEOUT)
-            
-            if response.status_code == 401:
-                raise AuthenticationError("Invalid API token or insufficient permissions")
-            elif response.status_code == 404:
-                raise APIError(f"Snapshot '{snapshot_id}' not found")
-            elif response.status_code != 200:
-                raise APIError(f"Failed to download snapshot with status {response.status_code}: {response.text}")
-            
-            if format == "csv":
-                data = response.text
-                save_data = data
-            else:
-                response_text = response.text
-                if '\n{' in response_text and response_text.strip().startswith('{'):
-                    json_objects = []
-                    for line in response_text.strip().split('\n'):
-                        if line.strip():
-                            try:
-                                json_objects.append(json.loads(line))
-                            except json.JSONDecodeError:
-                                continue
-                    data = json_objects
-                    save_data = json_objects
-                else:
-                    try:
-                        data = response.json()
-                        save_data = data
-                    except json.JSONDecodeError:
-                        
-                        data = response_text
-                        save_data = response_text
-            
-            
-            try:
-                output_file = f"snapshot_{snapshot_id}.{format}"
-                if format == "csv" or isinstance(save_data, str):
-                    with open(output_file, 'w', encoding='utf-8') as f:
-                        f.write(str(save_data))
-                else:
-                    with open(output_file, 'w', encoding='utf-8') as f:
-                        json.dump(save_data, f, indent=2, ensure_ascii=False)
-                print(f"Data saved to: {output_file}")
-            except:
-                pass
-            
-            return data
-                    
-        except requests.exceptions.Timeout:
-            raise APIError(f"Timeout while downloading snapshot '{snapshot_id}'")
-        except requests.exceptions.RequestException as e:
-            raise APIError(f"Network error while downloading snapshot: {str(e)}")
-        except Exception as e:
-            if isinstance(e, (ValidationError, AuthenticationError, APIError)):
-                raise
-            raise APIError(f"Unexpected error while downloading snapshot: {str(e)}")
+        return self.download_api.download_snapshot(snapshot_id, format, compress, batch_size, part)
 
-    def _parse_body_json(self, content: Union[Dict, List]) -> Union[Dict, List]:
-        """
-        Parse JSON strings in 'body' fields to objects
-        
-        Args:
-            content: The content to process
-            
-        Returns:
-            Content with parsed body fields
-        """
-        if content is None:
-            return content
-            
-        if isinstance(content, list):
-            # Process each item in the list
-            for item in content:
-                if isinstance(item, dict) and 'body' in item and isinstance(item['body'], str):
-                    try:
-                        # Only parse if body contains JSON-like content (starts with { or [)
-                        body_str = item['body'].strip()
-                        if body_str.startswith(('{', '[')):
-                            item['body'] = json.loads(item['body'])
-                    except (json.JSONDecodeError, AttributeError):
-                        # Keep as string if not valid JSON or if any error occurs
-                        logger.debug(f"Failed to parse body as JSON, keeping as string")
-                        pass
-        elif isinstance(content, dict) and 'body' in content and isinstance(content['body'], str):
-            try:
-                # Only parse if body contains JSON-like content (starts with { or [)
-                body_str = content['body'].strip()
-                if body_str.startswith(('{', '[')):
-                    content['body'] = json.loads(content['body'])
-            except (json.JSONDecodeError, AttributeError):
-                # Keep as string if not valid JSON or if any error occurs
-                logger.debug(f"Failed to parse body as JSON, keeping as string")
-                pass
-        
-        return content
 
     def list_zones(self) -> List[Dict[str, Any]]:
         """
