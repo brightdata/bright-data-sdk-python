@@ -132,3 +132,8 @@ dmypy.json
 # OS
 .DS_Store
 Thumbs.db
+
+# PyPI credentials and sensitive files
+.pypirc
+.pypirc.bak
+*.pypirc
