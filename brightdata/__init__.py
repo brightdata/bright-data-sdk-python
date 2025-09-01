@@ -29,10 +29,22 @@ Then use the client to call the desired functions:
 - Saves the scraped content to local files in various formats (JSON, CSV, etc.)
 - syntax: `client.download_content(results)`
 - syntax: `client.download_snapshot(results)`
+#### connect_browser()
+- Get WebSocket endpoint for connecting to Bright Data's scraping browser with Playwright/Selenium
+- syntax: `endpoint_url = client.connect_browser()` then use with browser automation tools
+#### crawl()
+- Crawl websites to discover and scrape multiple pages using Bright Data's Web Crawl API
+- syntax: `result = client.crawl(url, filter, exclude_filter, depth, ...)`
+#### parse_content()
+- Parse and extract useful information from API responses (JSON or HTML)
+- syntax: `parsed = client.parse_content(data, extract_text=True, extract_links=True)`
 
 ### Features:
 - Web Scraping: Scrape websites using Bright Data Web Unlocker API with proxy support
 - Search Engine Results: Perform web searches using Bright Data SERP API  
+- Web Crawling: Discover and scrape multiple pages from websites with advanced filtering
+- Content Parsing: Extract text, links, images, and structured data from API responses
+- Browser Automation: Simple authentication for Bright Data's scraping browser with Playwright/Selenium
 - Multiple Search Engines: Support for Google, Bing, and Yandex
 - Parallel Processing: Concurrent processing for multiple URLs or queries
 - Robust Error Handling: Comprehensive error handling with retry logic
@@ -50,8 +62,9 @@ from .exceptions import (
     NetworkError,
     APIError
 )
+from .utils import parse_content, parse_multiple, extract_structured_data
 
-__version__ = "1.0.8"
+__version__ = "1.1.0"
 __author__ = "Bright Data"
 __email__ = "support@brightdata.com"
 
@@ -62,5 +75,8 @@ __all__ = [
     'AuthenticationError',
     'ZoneError',
     'NetworkError',
-    'APIError'
+    'APIError',
+    'parse_content',
+    'parse_multiple',
+    'extract_structured_data'
 ]

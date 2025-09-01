@@ -1,10 +1,9 @@
-import sys
-import os
+import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from brightdata import bdclient
 
-client = bdclient("your-api-key") # can also be taken from .env file
+client = bdclient(api_token="your-api-key") # can also be taken from .env file
     
 # LinkedIn Profile URLs
 profile_url = "https://www.linkedin.com/in/elad-moshe-05a90413/"

@@ -152,11 +152,22 @@ class DownloadAPI:
                 timeout=self.default_timeout
             )
             
-            if response.status_code == 401:
+            if response.status_code == 200:
+                pass
+            elif response.status_code == 202:
+                try:
+                    response_data = response.json()
+                    message = response_data.get('message', 'Snapshot is not ready yet')
+                    print("Snapshot is not ready yet, try again soon")
+                    return {"status": "not_ready", "message": message, "snapshot_id": snapshot_id}
+                except json.JSONDecodeError:
+                    print("Snapshot is not ready yet, try again soon")
+                    return {"status": "not_ready", "message": "Snapshot is not ready yet, check again soon", "snapshot_id": snapshot_id}
+            elif response.status_code == 401:
                 raise AuthenticationError("Invalid API token or insufficient permissions")
             elif response.status_code == 404:
                 raise APIError(f"Snapshot '{snapshot_id}' not found")
-            elif response.status_code != 200:
+            else:
                 raise APIError(f"Download request failed with status {response.status_code}: {response.text}")
             
             if format == "csv":

@@ -1,10 +1,9 @@
-import sys
-import os
+import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from brightdata import bdclient
 
-client = bdclient(api_token="your-api-token") #can also be taken from .env file
+client = bdclient(api_token="your-api-key") #can also be taken from .env file
 
 URL = (["https://www.amazon.com/dp/B079QHML21",
         "https://www.ebay.com/itm/365771796300",
@@ -12,4 +11,6 @@ URL = (["https://www.amazon.com/dp/B079QHML21",
 
 results = client.scrape(url=URL, max_workers=5)
 
-client.download_content(results)
+result = client.parse_content(results, extract_text=True) # Choose what to extract
+
+print(result)
