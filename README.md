@@ -7,19 +7,6 @@ pip install brightdata-sdk
 <h3 align="center">Python SDK by Bright Data, Easy-to-use scalable methods for web search & scraping</h3>
 <p></p>
 
-## Features
-
-| Feature                        | Functions                   | Description
-|--------------------------|-----------------------------|-------------------------------------
-| **Scrape every website** | `scrape`                    | Scrape every website using Bright's scraping and unti bot-detection capabilities
-| **Web search**           | `search`                    | Search google and other search engines by query (supports batch searches)
-| **Search chatGPT**       | `search_chatGPT`            | Prompt chatGPT and scrape its answers, support multiple inputs and follow-up prompts
-| **Search linkedin**      | `search_linkedin.posts()`, `search_linkedin.jobs()`, `search_linkedin.profiles()` | Search LinkedIn by specific queries, and recieve structured data
-| **Scrape linkedin**      | `scrape_linkedin.posts()`, `scrape_linkedin.jobs()`, `scrape_linkedin.profiles()`, `scrape_linkedin.companies()` | Scrape LinkedIn and recieve structured data
-| **Download functions**   | `download_snapshot`, `download_content`  | Download content for both sync and async requests
-| **Client class**         | `bdclient`         | Handles authentication, automatic zone creation and managment, and options for robust error handling
-| **Parallel processing**  | **all functions**  | All functions use Concurrent processing for multiple URLs or queries, and support multiple Output Formats
-
 ## Installation
 To install the package, open your terminal:
 
@@ -32,7 +19,7 @@ pip install brightdata-sdk
 
 Create a [Bright Data](https://brightdata.com/) account and copy your API key
 
-### 1. Initialize the Client
+### Initialize the Client
 
 ```python
 from brightdata import bdclient
@@ -40,7 +27,31 @@ from brightdata import bdclient
 client = bdclient(api_token="your_api_token_here") # can also be defined as BRIGHTDATA_API_TOKEN in your .env file
 ```
 
-### 2. Try usig one of the functions
+### Launch first request
+Add to your code a serp function
+```python
+results = client.search("best selling shoes")
+
+print(client.parse_content(results))
+```
+
+## Features
+
+| Feature                        | Functions                   | Description
+|--------------------------|-----------------------------|-------------------------------------
+| **Scrape every website** | `scrape`                    | Scrape every website using Bright's scraping and unti bot-detection capabilities
+| **Web search**           | `search`                    | Search google and other search engines by query (supports batch searches)
+| **Web crawling**         | `crawl`                     | Discover and scrape multiple pages from websites with advanced filtering and depth control
+| **Content parsing**      | `parse_content`             | Extract text, links, images and structured data from API responses (JSON or HTML)
+| **Browser automation**   | `connect_browser`           | Get WebSocket endpoint for Playwright/Selenium integration with Bright Data's scraping browser
+| **Search chatGPT**       | `search_chatGPT`            | Prompt chatGPT and scrape its answers, support multiple inputs and follow-up prompts
+| **Search linkedin**      | `search_linkedin.posts()`, `search_linkedin.jobs()`, `search_linkedin.profiles()` | Search LinkedIn by specific queries, and recieve structured data
+| **Scrape linkedin**      | `scrape_linkedin.posts()`, `scrape_linkedin.jobs()`, `scrape_linkedin.profiles()`, `scrape_linkedin.companies()` | Scrape LinkedIn and recieve structured data
+| **Download functions**   | `download_snapshot`, `download_content`  | Download content for both sync and async requests
+| **Client class**         | `bdclient`         | Handles authentication, automatic zone creation and managment, and options for robust error handling
+| **Parallel processing**  | **all functions**  | All functions use Concurrent processing for multiple URLs or queries, and support multiple Output Formats
+
+### Try usig one of the functions
 
 #### `Search()`
 ```python
@@ -108,6 +119,56 @@ results = client.scrape_linkedin.posts(post_urls) # can also be changed to async
 print(results) # will print the snapshot_id, which can be downloaded using the download_snapshot() function
 ```
 
+#### `crawl()`
+```python
+# Single URL crawl with filters
+result = client.crawl(
+    url="https://example.com/",
+    depth=2,
+    filter="/product/",           # Only crawl URLs containing "/product/"
+    exclude_filter="/ads/",       # Exclude URLs containing "/ads/"
+    custom_output_fields=["markdown", "url", "page_title"]
+)
+print(f"Crawl initiated. Snapshot ID: {result['snapshot_id']}")
+
+# Download crawl results
+data = client.download_snapshot(result['snapshot_id'])
+```
+
+#### `parse_content()`
+```python
+# Parse scraping results
+scraped_data = client.scrape("https://example.com")
+parsed = client.parse_content(
+    scraped_data, 
+    extract_text=True, 
+    extract_links=True, 
+    extract_images=True
+)
+print(f"Title: {parsed['title']}")
+print(f"Text length: {len(parsed['text'])}")
+print(f"Found {len(parsed['links'])} links")
+```
+
+#### `connect_browser()`
+```python
+# For Playwright (default browser_type)
+from playwright.sync_api import sync_playwright
+
+client = bdclient(
+    api_token="your_api_token",
+    browser_username="username-zone-browser_zone1",
+    browser_password="your_password"
+)
+
+with sync_playwright() as playwright:
+    browser = playwright.chromium.connect_over_cdp(client.connect_browser())
+    page = browser.new_page()
+    page.goto("https://example.com")
+    print(f"Title: {page.title()}")
+    browser.close()
+```
+
 **`download_content`** (for sync requests)
 ```python
 data = client.scrape("https://example.com")
@@ -156,6 +217,50 @@ Scrapes a single URL or list of URLs using the Web Unlocker.
 
 </details>
 <details>
+    <summary>🕷️ <strong>crawl(...)</strong></summary>
+
+Discover and scrape multiple pages from websites with advanced filtering.
+
+```python
+- `url`: Single URL string or list of URLs to crawl (required)
+- `ignore_sitemap`: Ignore sitemap when crawling (optional)
+- `depth`: Maximum crawl depth relative to entered URL (optional)
+- `filter`: Regex to include only certain URLs (e.g. "/product/")
+- `exclude_filter`: Regex to exclude certain URLs (e.g. "/ads/")
+- `custom_output_fields`: List of output fields to include (optional)
+- `include_errors`: Include errors in response (default: True)
+```
+
+</details>
+<details>
+    <summary>🔍 <strong>parse_content(...)</strong></summary>
+
+Extract and parse useful information from API responses.
+
+```python
+- `data`: Response data from scrape(), search(), or crawl() methods
+- `extract_text`: Extract clean text content (default: True)
+- `extract_links`: Extract all links from content (default: False)
+- `extract_images`: Extract image URLs from content (default: False)
+```
+
+</details>
+<details>
+    <summary>🌐 <strong>connect_browser(...)</strong></summary>
+
+Get WebSocket endpoint for browser automation with Bright Data's scraping browser.
+
+```python
+# Required client parameters:
+- `browser_username`: Username for browser API (format: "username-zone-{zone_name}")
+- `browser_password`: Password for browser API authentication
+- `browser_type`: "playwright", "puppeteer", or "selenium" (default: "playwright")
+
+# Returns: WebSocket endpoint URL string
+```
+
+</details>
+<details>
     <summary>💾 <strong>Download_Content(...)</strong></summary>
 
 Save content to local file.
@@ -191,8 +296,11 @@ Create a `.env` file in your project root:
 
 ```env
 BRIGHTDATA_API_TOKEN=your_bright_data_api_token
-WEB_UNLOCKER_ZONE=your_web_unlocker_zone  # Optional
-SERP_ZONE=your_serp_zone                  # Optional
+WEB_UNLOCKER_ZONE=your_web_unlocker_zone        # Optional
+SERP_ZONE=your_serp_zone                        # Optional
+BROWSER_ZONE=your_browser_zone                  # Optional
+BRIGHTDATA_BROWSER_USERNAME=username-zone-name  # For browser automation
+BRIGHTDATA_BROWSER_PASSWORD=your_browser_password  # For browser automation
 ```
 
 </details>
@@ -223,14 +331,21 @@ client = bdclient(
 <details>
     <summary>👥 <strong>Client Management</strong></summary>
     
-bdclient Class
+bdclient Class - Complete parameter list
     
 ```python
 bdclient(
-    api_token: str = None,
-    auto_create_zones: bool = True,
-    web_unlocker_zone: str = None,
-    serp_zone: str = None,
+    api_token: str = None,                    # Your Bright Data API token (required)
+    auto_create_zones: bool = True,           # Auto-create zones if they don't exist
+    web_unlocker_zone: str = None,            # Custom web unlocker zone name
+    serp_zone: str = None,                    # Custom SERP zone name
+    browser_zone: str = None,                 # Custom browser zone name
+    browser_username: str = None,             # Browser API username (format: "username-zone-{zone_name}")
+    browser_password: str = None,             # Browser API password
+    browser_type: str = "playwright",         # Browser automation tool: "playwright", "puppeteer", "selenium"
+    log_level: str = "INFO",                  # Logging level: "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
+    structured_logging: bool = True,          # Use structured JSON logging
+    verbose: bool = None                      # Enable verbose logging (overrides log_level if True)
 )
 ```
     

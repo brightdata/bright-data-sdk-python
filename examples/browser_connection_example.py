@@ -2,7 +2,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from brightdata import bdclient
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, Playwright
 
 client = bdclient(
     api_token="your-api-key",
@@ -11,9 +11,23 @@ client = bdclient(
     browser_zone="your-custom-browser-zone"
 ) # Hover over the function to see browser parameters (can also be taken from .env file)
 
-with sync_playwright() as playwright:
+def scrape(playwright: Playwright, url="https://example.com"):
     browser = playwright.chromium.connect_over_cdp(client.connect_browser()) # Connect to the browser using Bright Data's endpoint
-    page = browser.new_page()
-    page.goto("https://example.com")
-    print(f"Title: {page.title()}")
-    browser.close()
+    try:
+        print(f'Connected! Navigating to {url}...')
+        page = browser.new_page()
+        page.goto(url, timeout=2*60_000)
+        print('Navigated! Scraping page content...')
+        data = page.content()
+        print(f'Scraped! Data: {data}')
+    finally:
+        browser.close()
+
+
+def main():
+    with sync_playwright() as playwright:
+        scrape(playwright)
+
+
+if __name__ == '__main__':
+    main()

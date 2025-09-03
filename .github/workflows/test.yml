@@ -5,6 +5,8 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'
 
 jobs:
   test:
@@ -43,9 +45,10 @@ jobs:
 
   test-pypi-package:
     runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
     strategy:
       matrix:
-        python-version: ['3.8', '3.11']  # Test on fewer versions for PyPI to save CI time
+        python-version: ['3.8', '3.11']
     
     steps:
     - uses: actions/checkout@v4

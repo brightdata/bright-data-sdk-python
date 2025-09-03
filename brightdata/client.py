@@ -594,7 +594,7 @@ class bdclient:
             api_token="your_token",
             browser_username="username-zone-browser_zone1",
             browser_password="your_password",
-            browser_type="playwright"  # or omit for default
+            browser_type="playwright"  # Playwright/ Puppeteer (default)
         )
         endpoint_url = client.connect_browser()  # Returns: wss://...@brd.superproxy.io:9222
         
