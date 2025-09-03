@@ -1,9 +1,6 @@
 
 <img width="1300" height="200" alt="sdk-banner(1)" src="https://github.com/user-attachments/assets/c4a7857e-10dd-420b-947a-ed2ea5825cb8" />
 
-```python
-pip install brightdata-sdk
-```
 <h3 align="center">Python SDK by Bright Data, Easy-to-use scalable methods for web search & scraping</h3>
 <p></p>
 
@@ -34,6 +31,8 @@ results = client.search("best selling shoes")
 
 print(client.parse_content(results))
 ```
+
+<img width="4790" height="2100" alt="banner" src="https://github.com/user-attachments/assets/faf4939d-7cf6-4b54-bde5-aa3b9d9d26ef" />
 
 ## Features
 
