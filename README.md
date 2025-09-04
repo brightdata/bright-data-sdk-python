@@ -42,6 +42,7 @@ print(client.parse_content(results))
 | **Scrape every website** | `scrape`                    | Scrape every website using Bright's scraping and unti bot-detection capabilities
 | **Web search**           | `search`                    | Search google and other search engines by query (supports batch searches)
 | **Web crawling**         | `crawl`                     | Discover and scrape multiple pages from websites with advanced filtering and depth control
+| **AI-powered extraction** | `extract`                  | Extract specific information from websites using natural language queries and OpenAI
 | **Content parsing**      | `parse_content`             | Extract text, links, images and structured data from API responses (JSON or HTML)
 | **Browser automation**   | `connect_browser`           | Get WebSocket endpoint for Playwright/Selenium integration with Bright Data's scraping browser
 | **Search chatGPT**       | `search_chatGPT`            | Prompt chatGPT and scrape its answers, support multiple inputs and follow-up prompts
@@ -150,6 +151,23 @@ print(f"Text length: {len(parsed['text'])}")
 print(f"Found {len(parsed['links'])} links")
 ```
 
+#### `extract()`
+```python
+# Simple AI-powered extraction using natural language
+result = client.extract("extract the latest news headlines from bbc.com")
+print(result)  # Prints extracted headlines directly
+
+# Extract specific information with custom query
+result = client.extract("get product name and price from amazon.com/dp/B079QHML21")
+print(f"Product info: {result}")
+print(f"Source: {result.url}")
+print(f"Tokens used: {result.token_usage['total_tokens']}")
+
+# Extract structured data
+result = client.extract("find contact information and business hours from company-website.com")
+print(result)  # AI-formatted contact details
+```
+
 #### `connect_browser()`
 ```python
 # For Playwright (default browser_type)
@@ -246,6 +264,20 @@ Extract and parse useful information from API responses.
 
 </details>
 <details>
+    <summary>🤖 <strong>extract(...)</strong></summary>
+
+Extract specific information from websites using AI-powered natural language processing.
+
+```python
+- `query`: Natural language query containing what to extract and from which URL (required)
+- `llm_key`: OpenAI API key (optional - uses OPENAI_API_KEY env variable if not provided)
+
+# Returns: Extracted content as string with metadata attributes
+# Available attributes: .url, .query, .source_title, .token_usage, .content_length
+```
+
+</details>
+<details>
     <summary>🌐 <strong>connect_browser(...)</strong></summary>
 
 Get WebSocket endpoint for browser automation with Bright Data's scraping browser.
@@ -301,6 +333,7 @@ SERP_ZONE=your_serp_zone                        # Optional
 BROWSER_ZONE=your_browser_zone                  # Optional
 BRIGHTDATA_BROWSER_USERNAME=username-zone-name  # For browser automation
 BRIGHTDATA_BROWSER_PASSWORD=your_browser_password  # For browser automation
+OPENAI_API_KEY=your_openai_api_key              # For extract() function
 ```
 
 </details>

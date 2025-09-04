@@ -9,6 +9,7 @@ from .api.chatgpt import ChatGPTAPI
 from .api.linkedin import LinkedInAPI, LinkedInScraper, LinkedInSearcher
 from .api.download import DownloadAPI
 from .api.crawl import CrawlAPI
+from .api.extract import ExtractAPI
 from .utils import ZoneManager, setup_logging, get_logger, parse_content
 from .exceptions import ValidationError, AuthenticationError, APIError
 
@@ -184,6 +185,7 @@ class bdclient:
             self.MAX_RETRIES,
             self.RETRY_BACKOFF_FACTOR
         )
+        self.extract_api = ExtractAPI(self)
         
         if self.auto_create_zones:
             self.zone_manager.ensure_required_zones(
@@ -788,3 +790,69 @@ class bdclient:
             extract_links=extract_links,
             extract_images=extract_images
         )
+
+    def extract(self, query: str, llm_key: str = None) -> str:
+        """
+        ## Extract specific information from websites using AI
+        
+        Combines web scraping with OpenAI's language models to extract targeted information
+        from web pages based on natural language queries. Automatically parses URLs and
+        optimizes content for efficient LLM processing.
+        
+        ### Parameters:
+        - `query` (str): Natural language query containing what to extract and from which URL
+                        (e.g. "extract the most recent news from cnn.com")
+        - `llm_key` (str, optional): OpenAI API key. If not provided, uses OPENAI_API_KEY env variable
+        
+        ### Returns:
+        - `str`: Extracted content (also provides access to metadata via attributes)
+        
+        ### Example Usage:
+        ```python
+        # Simple usage - prints extracted content directly
+        result = client.extract("extract the most recent news from cnn.com")
+        print(result)  # Prints the extracted news content
+        
+        # Access metadata attributes
+        print(f"Source: {result.url}")
+        print(f"Title: {result.source_title}")
+        print(f"Tokens used: {result.token_usage['total_tokens']}")
+        
+        # Use with custom OpenAI key
+        result = client.extract(
+            query="get the price and description from amazon.com/dp/B079QHML21",
+            llm_key="your-openai-api-key"
+        )
+        
+        # Access full metadata dictionary
+        metadata = result.metadata
+        ```
+        
+        ### Environment Variable Setup:
+        ```bash
+        # Set in .env file
+        OPENAI_API_KEY=your-openai-api-key
+        ```
+        
+        ### Available Attributes:
+        ```python
+        result = client.extract("extract news from cnn.com")
+        
+        # String value (default behavior)
+        str(result)              # Extracted content
+        
+        # Metadata attributes
+        result.query             # 'extract news'  
+        result.url               # 'https://www.cnn.com'
+        result.source_title      # 'CNN - Breaking News...'
+        result.content_length    # 1234
+        result.token_usage       # {'total_tokens': 2998, ...}
+        result.success           # True
+        result.metadata          # Full metadata dictionary
+        ```
+        
+        ### Raises:
+        - `ValidationError`: Invalid query format, missing URL, or invalid LLM key
+        - `APIError`: Web scraping failed or LLM processing error
+        """
+        return self.extract_api.extract(query, llm_key)

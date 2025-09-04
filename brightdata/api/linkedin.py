@@ -96,30 +96,50 @@ class LinkedInAPI:
         
         logger.info(f"Processing {len(url_list)} LinkedIn {dataset_type} URL(s) {'synchronously' if sync else 'asynchronously'}")
         
-        api_url = "https://api.brightdata.com/datasets/v3/trigger"
         headers = {
             "Authorization": f"Bearer {self.api_token}",
             "Content-Type": "application/json"
         }
-        params = {
-            "dataset_id": dataset_id,
-            "include_errors": "true"
-        }
         
-        data = [{"url": url} for url in url_list]
+        if sync:
+            api_url = "https://api.brightdata.com/datasets/v3/scrape"
+            data = {
+                "input": [{"url": url} for url in url_list]
+            }
+            params = {
+                "dataset_id": dataset_id,
+                "notify": "false",
+                "include_errors": "true"
+            }
+        else:
+            api_url = "https://api.brightdata.com/datasets/v3/trigger"
+            data = [{"url": url} for url in url_list]
+            params = {
+                "dataset_id": dataset_id,
+                "include_errors": "true"
+            }
         
         try:
-            response = self.session.post(
-                api_url,
-                headers=headers,
-                params=params,
-                json=data,
-                timeout=timeout or (65 if sync else self.default_timeout)
-            )
+            if sync:
+                response = self.session.post(
+                    api_url,
+                    headers=headers,
+                    params=params,
+                    json=data,
+                    timeout=timeout or 65
+                )
+            else:
+                response = self.session.post(
+                    api_url,
+                    headers=headers,
+                    params=params,
+                    json=data,
+                    timeout=timeout or self.default_timeout
+                )
             
             if response.status_code == 401:
                 raise AuthenticationError("Invalid API token or insufficient permissions")
-            elif response.status_code != 200:
+            elif response.status_code not in [200, 202]:
                 raise APIError(f"LinkedIn data collection request failed with status {response.status_code}: {response.text}")
             
             if sync:

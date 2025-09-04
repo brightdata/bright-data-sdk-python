@@ -64,7 +64,7 @@ from .exceptions import (
 )
 from .utils import parse_content, parse_multiple, extract_structured_data
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 __author__ = "Bright Data"
 __email__ = "support@brightdata.com"
 

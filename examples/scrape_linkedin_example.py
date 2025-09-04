@@ -3,7 +3,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from brightdata import bdclient
 
-client = bdclient(api_token="your-api-key") # can also be taken from .env file
+client = bdclient() # can also be taken from .env file
     
 # LinkedIn Profile URLs
 profile_url = "https://www.linkedin.com/in/elad-moshe-05a90413/"
@@ -29,4 +29,4 @@ post_urls = [
 
 results = client.scrape_linkedin.posts(post_urls) # can also be changed to async
 
-print(results)
+client.download_content(results)
